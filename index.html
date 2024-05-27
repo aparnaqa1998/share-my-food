@@ -77,12 +77,10 @@ select:hover, button:hover {
     <div id="foodBanksContainer">
         <!-- Food bank blocks will be inserted here -->
     </div>
+    <script src="config.js"></script>
     <script>
-       async function fetchFoodBanks() {
+        function fetchFoodBanks() {
             const location = document.getElementById('location').value;
-            const response = await fetch('/config');
-            const data = await response.json();
-             const apiUrl = data.apiUrl;
             fetch(`${apiUrl}/foodbanks?location=${location}`)
                 .then(response => response.json())
                 .then(data => {
