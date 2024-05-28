@@ -6,100 +6,117 @@
     <title>Share My Food</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #FFDAB9; 
-}
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #FFDAB9; 
+        }
 
-select, button {
-    margin: 10px 0;
-    padding: 8px 15px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-}
+        select, button {
+            margin: 10px 0;
+            padding: 8px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
 
-select:hover, button:hover {
-    background-color: #45a049;
-}
+        select:hover, button:hover {
+            background-color: #45a049;
+        }
 
-.foodBankBlock {
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 250px;
-    text-align: center;
-    background-color: #fff;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
-    transition: 0.3s;
-}
+        .foodBankBlock {
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 250px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
 
-.foodBankBlock:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
+        .foodBankBlock:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
 
-.foodBankBlock img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-}
+        .foodBankBlock img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
 
-.foodBankBlock h3 {
-    color: #4CAF50;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
+        .foodBankBlock h3 {
+            color: #4CAF50;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
 
-.foodBankBlock p {
-    color: #333;
-    font-size: 16px;
-    margin-bottom: 5px;
-}
+        .foodBankBlock p {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
     <h1>Share My Food - Food Banks</h1>
     <label for="location">Select Location:</label>
-    <select id="location">
+    <select id="location" onchange="updateImage()">
         <option value="Calgary">Calgary</option>
         <option value="Edmonton">Edmonton</option>
         <option value="Toronto">Toronto</option>
     </select>
     <button onclick="fetchFoodBanks()">Get Food Banks</button>
-    <div id="foodBanksContainer">
-        <!-- Food bank blocks will be inserted here -->
-    </div>
-    <script src="config.js"></script>
+    <div id="foodBanksContainer"></div>
+
     <script>
-        function fetchFoodBanks() {
+        function updateImage() {
             const location = document.getElementById('location').value;
-            fetch(`${apiUrl}/foodbanks?location=${location}`)
-                .then(response => response.json())
-                .then(data => {
-                    const container = document.getElementById('foodBanksContainer');
-                    container.innerHTML = '';
-                    data.forEach(foodBank => {
-                        const block = document.createElement('div');
-                        block.classList.add('foodBankBlock');
-                        block.innerHTML = `
-                            <img src="foodbank.png" alt="Food Bank">
-                            <h3>${foodBank.foodbank_name}</h3>
-                            <p><strong>Location:</strong> ${foodBank.foodbank_location.trim()}</p>
-                            <p><strong>Address:</strong> ${foodBank.foodbank_address}</p>
-                            <p><strong>Contact:</strong> ${foodBank.food_contact}</p>
-                        `;
-                        container.appendChild(block);
-                    });
-                })
-                .catch(error => console.error('Error fetching food banks:', error));
+            const image = document.getElementById('foodBankImage');
+            
+            // Change image source based on selected location
+            if (location === 'Calgary') {
+                image.src = 'foodbank_calgary.png';
+            } else if (location === 'Edmonton') {
+                image.src = 'foodbank_edmonton.png';
+            } else if (location === 'Toronto') {
+                image.src = 'foodbank_toronto.png';
+            }
+        }
+
+        function fetchFoodBanks() {
+            
+            const container = document.getElementById('foodBanksContainer');
+            container.innerHTML = ''; // Clear previous content
+            
+            const location = document.getElementById('location').value;
+            
+            // Example data, you should fetch this from an API
+            const foodBanks = [
+                { name: 'FoodBank Calgary', address: '30th AVE SW, Calgary', image: 'foodbank_calgary.png' },
+                { name: 'FoodBank Edmonton', address: '5th ST NW, Edmonton', image: 'foodbank_edmonton.png' },
+                { name: 'FoodBank Toronto', address: 'Queen ST W, Toronto', image: 'foodbank_toronto.png' }
+            ];
+            
+            foodBanks.forEach(bank => {
+                if (bank.name.includes(location)) {
+                    const block = document.createElement('div');
+                    block.classList.add('foodBankBlock');
+                    block.innerHTML = `
+                        <img src="${bank.image}" alt="${bank.name}">
+                        <h3>${bank.name}</h3>
+                        <p><strong>Location:</strong> ${bank.address}</p>
+                    `;
+                    container.appendChild(block);
+                }
+            });
         }
     </script>
 </body>
