@@ -11,7 +11,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
+app.get('/api/config', (req, res) => {
+    res.json({ apiUrl: process.env.APIURL });
+  });
 // Set the port to listen on
 const port = process.env.PORT || 80;
 app.listen(port, () => {

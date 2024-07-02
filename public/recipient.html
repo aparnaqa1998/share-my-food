@@ -80,12 +80,17 @@
     </div>
 
     <script>
+        async function getApiUrl() {
+      const response = await fetch('/api/config');
+      const config = await response.json();
+      return config.apiUrl;
+    }
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
             e.preventDefault(); // Prevent the default form submission
 
             const formData = new FormData(this);
             const token = localStorage.getItem("token");x
-            fetch(`https://${process.env.APIURL}/upload-file`, {
+            fetch(`https://${apiUrl}/upload-file`, {
                 method: 'POST',
                 body: formData,
                 headers:
