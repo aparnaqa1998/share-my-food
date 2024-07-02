@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="config.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #FFDAB9; 
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="password"] {
+            width: 90%;
+            padding: 15px;
+            margin: 5px 0 10px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        .form-container input[type="text"]:focus,
+        .form-container input[type="password"]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        .form-container .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom:10px;
+            opacity: 0.8;
+        }
+
+        .form-container .btn:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <form class="form-container" id="loginForm">
+        <h2>Login</h2>
+
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Email" name="email" required>
+
+        <label for="password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" required>
+
+        <button type="button" class="btn" onclick="submitLogin()">Login</button>
+    </form>
+
+    <script>
+        async function submitLogin() {
+            const form = document.getElementById('loginForm');
+            const formData = new FormData(form);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await fetch(`https://${process.env.APIURL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                alert(result.message);
+
+                if (response.status == 200) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('email',data.email);
+                    //const tokenString = token.split(' ')[1];
+                    localStorage.setItem('token',result.token);
+                    window.location.href = 'index.html';
+                } else {
+                    console.error('Login failed:', result);
+                }
+
+            } catch (error) {
+                console.error('Error logging in:', error);
+                alert('Error logging in');
+            }
+        }
+    </script>
+</body>
+</html>

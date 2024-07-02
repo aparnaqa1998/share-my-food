@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share My Food - Recipient Form</title>
+    <script src="config.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #FFDAB9; 
+        }
+        .form-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Recipient File Upload</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
+
+            <label>Requirements:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="requirements" value="Food"> Food</label>
+                <label><input type="checkbox" name="requirements" value="Groceries"> Groceries</label>
+                <label><input type="checkbox" name="requirements" value="Toys"> Toys</label>
+                <label><input type="checkbox" name="requirements" value="Clothes"> Clothes</label>
+                <label><input type="checkbox" name="requirements" value="Kitchen Items"> Kitchen Items</label>
+                <label><input type="checkbox" name="requirements" value="Used Electronics"> Used Electronics</label>
+            </div>
+
+            <label for="file">Additional requirements:</label>
+            <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(this);
+            const token = localStorage.getItem("token");x
+            fetch(`https://${process.env.APIURL}/upload-file`, {
+                method: 'POST',
+                body: formData,
+                headers:
+                {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('File uploaded successfully!');
+                window.location.href = 'index.html';
+            })
+            .catch(error => {
+                alert('Error uploading file!');
+                console.error(error);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register as Donor</title>
+    <script src="config.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #FFDAB9; 
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="tel"],
+        .form-container textarea {
+            width: 90%;
+            padding: 15px;
+            margin: 5px 0 10px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        .form-container input[type="text"]:focus,
+        .form-container input[type="email"]:focus,
+        .form-container input[type="tel"]:focus,
+        .form-container textarea:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        .form-container .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom:10px;
+            opacity: 0.8;
+        }
+
+        .hyperlink {
+            color: blue;
+            cursor: pointer;
+        }
+
+        .form-container .btn:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <form class="form-container" id="donorForm">
+        <h2>User Registration Form</h2>
+
+        <label for="name"><b>Name</b></label>
+        <input type="text" placeholder="Enter Name" name="name" required>
+
+        <label for="email"><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" name="email" required>
+
+        <label for="phone"><b>Phone</b></label>
+        <input type="tel" placeholder="Enter Phone" name="phone" required>
+
+        <label for="address"><b>Address</b></label>
+        <textarea placeholder="Enter Address" name="address" required></textarea>
+
+        <label for="password"><b>Password</b></label>
+        <textarea placeholder="Enter Password" name="password" required></textarea>
+
+        <button type="button" class="btn" onclick="submitForm()">Submit</button>
+        <p onclick="window.location.href='login.html'">Already registered? Please login <a class=hyperlink>here</a></p>
+    </form>
+
+    <script>
+        async function submitForm() {
+            const form = document.getElementById('donorForm');
+            const formData = new FormData(form);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                address: formData.get('address'),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await fetch(`https://${process.env.APIURL}/submit-donor`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                alert(result.message);
+                if (response.ok) {
+                    window.location.href = 'index.html';
+                } else {
+                    console.error('Submission failed:', result);
+                }
+
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('Error submitting form');
+            }
+        }
+    </script>
+</body>
+</html>
