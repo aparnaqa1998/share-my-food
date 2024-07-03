@@ -99,7 +99,7 @@
             };
 
             try {
-                const response = await fetch(`https://${process.env.APIURL}/submit-donor`, {
+                const response = await fetch(`https://${window.env.APIURL}/submit-donor`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
